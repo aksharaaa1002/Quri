@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quri</title>
+
+  <style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: "Georgia", serif;
+    background-color: #f3efe7; /* beige */
+  }
+
+  h1 {
+    font-size: 56px;
+    margin-bottom: 24px;
+    color: #6b4f3f; /* brown */
+    letter-spacing: 2px;
+  }
+
+  input {
+    width: 500px;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 25px;
+    border: 1px solid #c4b7a6;
+    outline: none;
+    background-color: #faf7f2;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 10px 24px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background-color: #6b4f3f;
+    color: #ffffff;
+  }
+
+  #results {
+    width: 600px;
+    margin-top: 40px;
+    color: #4b3a2f;
+  }
+</style>
+
+</head>
+
+<body>
+
+  <h1>Quri</h1>
+
+  <input
+    id="query"
+    type="text"
+    placeholder="Curious?"
+  />
+
+  <button onclick="search()">Search</button>
+
+  <div id="results"></div>
+
+<script>
+  async function search() {
+    const q = document.getElementById("query").value;
+    const results = document.getElementById("results");
+
+    if (!q) {
+      results.innerHTML = "Type something to search.";
+      return;
+    }
+
+    results.innerHTML = "Searching...";
+
+    try {
+      const res = await fetch(`/search?q=${encodeURIComponent(q)}`);
+      const data = await res.json();
+
+      results.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        results.innerHTML = "No results found.";
+        return;
+      }
+
+      data.forEach(item => {
+        results.innerHTML += `
+          <div style="margin-bottom:20px;">
+            <h3>${item.title}</h3>
+            <p>${item.snippet}...</p>
+          </div>
+        `;
+      });
+    } catch (err) {
+      results.innerHTML = "Error fetching results.";
+    }
+  }
+</script>
+</body>
+</html>
