@@ -13,7 +13,11 @@ app.get("/search", async (req, res) => {
   const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${query}&format=json&origin=*`;
 
   try {
-    const response = await fetch(url); // native fetch (Node v24)
+    const response = await fetch(url, {
+      headers: {
+        "User-Agent": "QuriSearchApp/1.0 (https://quri.onrender.com)"
+      }
+    });     // native fetch (Node v24)
     const data = await response.json();
     res.json(data.query.search);
   } catch (error) {
